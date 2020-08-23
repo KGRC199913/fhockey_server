@@ -1,6 +1,8 @@
-var express = require('express');
-var app = express();
-var indexRouter = require('./routes/index')
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+
+const indexRouter = require('./routes/index')
 
 app.use('/', indexRouter);
 
@@ -19,9 +21,19 @@ app.use(function(err, req, res, next) {
   return res.status(err.status || 500);
 });
 
+const io = require('socket.io')(http);
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
 const PORT = 3001
 
-app.listen(PORT, () =>
+http.listen(PORT, () =>
   console.log(`listening on port ${PORT}!`),
 );
 
