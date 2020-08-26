@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-// const User = require("../models/user");
+const User = require("../models/user");
 
 userRoute.post('/users', async (req, res) => {
   try {
@@ -46,7 +46,9 @@ userRoute.post('/users/login', async (req, res) => {
   try {
     const { email, password } = require('./login')(req);
     
-    const user =
+    const user = User.findByCredential(email, password);
+    console.log("User: " + user);
+
     res.status(201).send({
       user,
       token
