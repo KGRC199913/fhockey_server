@@ -37,10 +37,12 @@ admin.initializeApp({
 
 const index = require('./routes/index');
 const user = require('./routes/users');
+const match = require('./routes/matches')
 
 app.use(express.json());
 app.use(index.indexRoute);
 app.use(user.userRoute);
+app.use(match.matchRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -61,11 +63,17 @@ const io = require('socket.io')(http);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  const _user = {username: '', id: ''}; 
+  const socketIO = {io, socket};
+
+  require('./socket/request-match')(_user, socketIO);
   
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 });
+
+require('./routes/matches').setupSocketIO(io);
 
 const PORT = 3001
 

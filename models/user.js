@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const admin = require("firebase-admin");
+const users = require("../routes/users");
 
 // Get a database reference
 const db = admin.database();
@@ -16,6 +17,17 @@ const User = {
             });
         });
         return user;
+    },
+    async findById(id) {
+      let user = null;
+      await usersRef.once("value", (snapshot) => {
+        snapshot.forEach((userSnapshot) => {
+          if (userSnapshot.key === id) {
+            user = userSnapshot.val();
+          }
+        });
+      });
+      return user;
     }
 };
 
