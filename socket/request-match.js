@@ -19,7 +19,7 @@ module.exports = function(socketIO={io:'',socket:{}}) {
       socketIO.io.to(playerId1).emit('START_GAME', {roomId});
       socketIO.io.to(playerId2).emit('START_GAME', {roomId});      
     } else {
-      MatchQueue.enqueue(id);
+      MatchQueue.enqueue(playerId1);
     }
   })
 }
